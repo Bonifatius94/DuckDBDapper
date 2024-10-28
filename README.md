@@ -21,7 +21,7 @@ public record Location
     public object City { get; set; }
 }
 
-var rows = connection.Query<T>($"SELECT * FROM './data/Location_v3.csv'").AsList();
+var rows = connection.Query<Location>($"SELECT * FROM './data/Location_v3.csv'").AsList();
 ```
 
 
