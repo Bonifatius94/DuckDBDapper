@@ -3,15 +3,19 @@
 
 ## Technical Insight
 
-DuckDB provides an IDbConnection to CSV files.
-Therefore launch DuckDB in in-memory mode.
+In this example, DuckDB doesn't need to persist any data.
+It will just read some static CSV files from disk.
+Therefore DuckDB is launched in memory mode without a database file.
 
 ```cs
 var connection = new DuckDBConnection("Data Source=:memory:");
 ```
 
-Dapper maps the CSV data to the Location DTO.
-Column names are adapted to the C# naming scheme.
+DuckDB provides direct access to CSV files via the SELECT query syntax
+which is commonly used to mock fake databases with CSV files, e.g. for testing.
+This can be leveraged as a .NET driver to load CSV files via an IDbConnection.
+Given the connection and CSV headers, Dapper then maps the CSV rows to DTOs.
+The CSV column types can be explicitly specified in the DuckDB query if needed.
 
 ```cs
 public record Location
@@ -21,9 +25,8 @@ public record Location
     public object City { get; set; }
 }
 
-var rows = connection.Query<Location>($"SELECT * FROM './data/Location_v3.csv'").AsList();
+var rows = connection.Query<Location>("SELECT * FROM './data/Location_v3.csv'").AsList();
 ```
-
 
 ## Usage
 
